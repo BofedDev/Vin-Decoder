@@ -1,6 +1,11 @@
+import Form from "../components/homePageComponents/form.jsx";
 
+const HomePage = () => {
+    return (
+        <>
+            <Form />
+        </>
+    )
+}
 
-const homePage = () => {}
-
-
-export default { homePage };
+export default HomePage
