@@ -28,11 +28,13 @@ const VariablesPage = () => {
             <h1>Змінні ({variables.length})</h1>
             <ol>
                 {variables.map((item) => (
-                    <li key={item.ID} onClick={() => navigate(`/variables/${item.ID}`)} style={{cursor: 'pointer'}}>
-                        <strong>{item.Name}</strong>
-                        {item.Description && (
-                            <p>{item.Description.replace(/<[^>]+>/g, '')}</p>
-                        )}
+                    <li key={item.ID}>
+                        <button onClick={() => navigate(`/variables/${item.ID}`)}>
+                            <strong>{item.Name}</strong>
+                            {item.Description && (
+                                <p>{item.Description.replace(/<[^>]+>/g, '')}</p>
+                            )}
+                        </button>
                     </li>
                 ))}
             </ol>

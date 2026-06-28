@@ -9,8 +9,15 @@ const Form = () => {
     const [result, setResult] = useState(null);
     const validate = (value) => {
         if (!value) return "Поле не може бути порожнім"
-        if (value.length > 17) return "Максимум 17 символів"
-        if (!/^[A-HJ-NPR-Z0-9]+$/i.test(value)) return "Недопустимі символи"
+
+        const normalized = value.toString().trim().toUpperCase();
+
+        if (normalized.length > 17) return "Максимум 17 символів"
+        if (normalized.length < 17) return "Поле має містити 17 символів"
+
+        if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(normalized))
+            return "Недопустимі символи (дозволені тільки A-H, J-N, P, R-Z та цифри)"
+
         return ""
     }
     const handleSubmit = (e) => {
@@ -54,20 +61,22 @@ const Form = () => {
         if (history.length === 0) return null;
 
         return (
-            <div>
+            <div className="history-container">
                 <h3>Історія запитів</h3>
 
                 {history.map((item, index) =>
-                    <p key={index} onClick={() => handleHistoryClick(item)} style={{cursor: 'pointer'}}>{item}</p>
-            )}
+                    <button key={index} onClick={() => handleHistoryClick(item)}>
+                        {item}
+                    </button>
+                )}
             </div>
         )
     }
 
     return (
         
-        <>
-            <form onSubmit={handleSubmit}>
+        <div className="container">
+            <form onSubmit={handleSubmit} >
                 <label>
                     Vin-номер:
                     <input
@@ -100,7 +109,7 @@ const Form = () => {
             )}
 
 
-        </>
+        </div>
     )
 
 

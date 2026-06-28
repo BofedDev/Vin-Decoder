@@ -1,18 +1,16 @@
 import { useParams } from 'react-router-dom';
-import {useState, useEffect} from "react";
-
+import { useState, useEffect } from "react";
 
 const VariablesDeterminedPage = () => {
-    const {variableId} = useParams();
+    const { variableId } = useParams();
     const [variable, setVariable] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-
     useEffect(() => {
         fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getvehiclevariablelist?format=json`)
             .then(res => {
-                if (!res.ok) throw new Error('Сетевая ошибка');
+                if (!res.ok) throw new Error('Мережева помилка');
                 return res.json();
             })
             .then(data => {
@@ -21,39 +19,24 @@ const VariablesDeterminedPage = () => {
                 setLoading(false);
             })
             .catch(err => {
-                setError(err);
+                setError(err.message);
                 setLoading(false);
-                return(<p>Error getting variable</p>);
             });
-
     }, [variableId]);
 
-    const renderVariable = () => {
-        if (!variable) return null;
-        const keys = Object.keys(variable);
-        return keys.map(key => (
-            <p key={key}>{key}: {variable[key]}</p>
-        ))
-    }
-
-
-
+    if (loading) return <p>Завантаження...</p>
+    if (error) return <p>Помилка завантаження</p>
+    if (!variable) return <p>Змінну не знайдено</p>
 
     return (
-        <div>
-
-            {loading ? (
-                <p >Variable: {variableId} is loading</p>
-                ):
-                (<div>{renderVariable()}</div>)
-            }
-            {error && <p>Помилка завантаження</p>}
-        </div>
+        <article>
+            <h1>{variable.Name}</h1>
+            {variable.GroupName && <p>Група: {variable.GroupName}</p>}
+            {variable.Description && (
+                <p>{variable.Description.replace(/<[^>]+>/g, '')}</p>
+            )}
+        </article>
     )
-
-
-
-
 }
 
 export default VariablesDeterminedPage
